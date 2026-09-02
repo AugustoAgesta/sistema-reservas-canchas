@@ -1,0 +1,17 @@
+# Base de datos (se genera sola al arrancar)
+canchas.db
+
+# Variables de entorno (secretos, no se comparten)
+.env
+
+# Archivos compilados de Python
+__pycache__/
+*.pyc
+
+# Entorno virtual (si lo usás)
+venv/
+env/
+
+# Archivos del sistema/editor
+.vscode/
+.DS_Store

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block titulo %}Gestión de canchas{% endblock titulo %}
+
+{% block contenido %}
+<div class="panel-admin">
+    <h2>Canchas registradas</h2>
+
+    <div class="selector-fecha">
+        <a href="{{ url_for('admin.nueva_cancha') }}" class="btn-agregar">Agregar cancha</a>
+    </div>
+
+    <ul class="lista-panel">
+        {% for c in canchas %}
+            <li class="{% if c.activa %}confirmada{% else %}cancelada{% endif %}">
+                <span>{{ c.nombre }} - {{ c.tipo }} - {{ c.piso }} - ${{ c.precio }} - {% if c.activa %}Activa{% else %}Inactiva{% endif %}</span>
+                <a href="{{ url_for('admin.editar_cancha', id=c.id) }}" class="btn-cancelar" style="background-color: var(--verde-principal);">Gestionar</a>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock contenido %}
+
+

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block titulo %}Perfil Usuario{% endblock  %}
+
+{% block  contenido%}
+    <h2>Historial de reservas</h2>
+
+    <h3>Reservas de {{ usuario_sesion.nombre }}</h3>
+    <ul class="lista-reservas-perfil">
+        {% for r in reservas %}
+            <li class="{% if r.estado == 'cancelada' %}cancelada{% elif r.fecha < hoy %}pasada{% else %}confirmada{% endif %}">
+                {{ r.fecha }} - {{ r.hora_inicio }}hs - {{ r.nombre_cancha }} - Estado: {{ r.estado }}
+            </li>
+        {% endfor %}
+    </ul>
+    
+    {% if not reservas %}
+        <p>Aún no hay reservas para este usuario.</p>
+    {% endif %}
+{% endblock  contenido%}

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block titulo %}Canchas{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
+</head>
+<body>
+    <header>
+    <h1>
+        <a href="{{ url_for('cliente.index') }}" class="logo-link">
+            {% if request.endpoint == 'cliente.index' %}
+                ⚽ Sistema de Reservas de Canchas
+            {% else %}
+                ⚽
+            {% endif %}
+        </a>
+    </h1>
+
+       <nav>
+            <div class="nav-izquierda">
+                <a href="{{ url_for('cliente.index') }}">Inicio</a>
+
+                {% if usuario_sesion %}
+                    {% if usuario_sesion.es_admin %}
+                        <a href="{{ url_for('admin.panel') }}">Panel</a>
+                        <a href="{{ url_for('admin.listar_canchas') }}">Listado de canchas</a>
+                        <a href="{{ url_for('admin.nuevo_bloqueo') }}">Gestionar bloqueos</a>
+                        <a href="{{ url_for('admin.estadisticas')}}">Estadisticas</a>
+                    {% endif %}
+                    <a href="{{ url_for('cliente.perfil') }}">Mi perfil</a>
+                    <a href="{{ url_for('cliente.logout') }}" onclick="return confirm('¿Seguro que querés cerrar sesión?')">Cerrar sesión</a>
+                {% else %}
+                    {% if request.endpoint != 'cliente.login' %}
+                        <a href="{{ url_for('cliente.login') }}">Iniciar sesión</a>
+                    {% endif %}
+                    {% if request.endpoint != 'cliente.registro' %}
+                        <a href="{{ url_for('cliente.registro') }}">Registrarse</a>
+                    {% endif %}
+                {% endif %}
+            </div>
+
+            {% if usuario_sesion %}
+                <div class="nav-usuario">
+                    <span class="icono-usuario">👤</span>
+                    <span class="{% if usuario_sesion.es_admin %}texto-admin{% endif %}">Hola, {{ usuario_sesion.nombre }}</span>
+                </div>
+            {% endif %}
+        </nav>
+    </header>
+
+    {% with mensajes = get_flashed_messages(with_categories=true) %}
+        {% if mensajes %}
+            {% for categoria, mensaje in mensajes %}
+                <div class="flash-{{ categoria }}">
+                    {{ mensaje }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <main>
+        {% block contenido %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2026 - Desarrollado por Augusto Agesta</p>
+    </footer>
+</body>
+</html>
+

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block titulo %}Página no encontrada{% endblock %}
+
+{% block contenido %}
+<div class="pagina-404">
+    <img src="{{ url_for('static', filename='img/404.png') }}" alt="Página no encontrada" class="img-404">
+    <h2>⚽ 404</h2>
+    <a href="{{ url_for('cliente.index') }}" class="btn-agregar">Volver al inicio</a>
+</div>
+{% endblock %}

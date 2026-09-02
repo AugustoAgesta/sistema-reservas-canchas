@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block titulo %}Inicio - Canchas{% endblock %}
+
+{% block contenido %}
+    <h2>Canchas disponibles</h2>
+
+    <div class="lista-canchas">
+        {% for cancha in canchas %}
+            <div class="tarjeta-cancha">
+                <img src="{{ url_for('static', filename='img/' + cancha.foto) }}" alt="{{ cancha.nombre }}">
+               <h3><a href="{{ url_for('cliente.detalle_cancha', id=cancha.id) }}">{{ cancha.nombre }}</a></h3>
+                <p>
+                    Cancha de {{ cancha.tipo }} con piso {{ cancha.piso }}, 
+                    {% if cancha.techo %}con techo{% else %}sin techo{% endif %}
+                </p>
+                <p>Precio: ${{ cancha.precio }}</p>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block titulo %}Bloquear horario{% endblock %}
+
+{% block contenido %}
+    <h2>Bloquear horario</h2>
+
+    <form method="POST">
+        <label>Cancha:</label>
+        <select name="id_cancha">
+            {% for c in canchas %}
+                <option value="{{ c.id }}">{{ c.nombre }}</option>
+            {% endfor %}
+        </select>
+
+        <label>Fecha:</label>
+        <input type="date" name="fecha" required>
+
+        <label>Hora inicio:</label>
+        <input type="time" name="hora_ini" required>
+
+        <label>Hora fin:</label>
+        <input type="time" name="hora_fin" required>
+
+        <label>Motivo:</label>
+        <input type="text" name="motivo">
+
+        <button type="submit">Bloquear</button>
+    </form>
+{% endblock %}

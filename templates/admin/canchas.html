@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block titulo %}Agregar cancha{% endblock %}
+
+{% block contenido %}
+    <h2>Agregar nueva cancha</h2>
+
+    <form method="POST">
+        <label>Nombre:</label>
+        <input type="text" name="nombre" required>
+
+        <label>Tipo:</label>
+        <select name="tipo">
+            <option value="Fut 11">Fut 11</option>
+            <option value="Fut 5">Fut 5</option>
+            <option value="Futsal">Futsal</option>
+        </select>
+
+        <label>Piso:</label>
+        <select name="piso">
+            <option value="sintetico">Sintético</option>
+            <option value="natural">Natural</option>
+            <option value="madera">Madera</option>
+        </select>
+
+        <label>
+            <input type="checkbox" name="techo"> Techada
+        </label>
+
+        <label>Precio:</label>
+        <input type="number" name="precio" required>
+
+        <label>Nombre del archivo de foto (ej: cancha1.jpg):</label>
+        <input type="text" name="foto" placeholder="cancha1.jpg">
+
+        <button type="submit">Guardar cancha</button>
+    </form>
+{% endblock %}
+

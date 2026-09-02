@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block titulo %}Panel Admin{% endblock %}
+
+{% block contenido %}
+<div class="panel-admin">
+    <h2>Panel de administrador</h2>
+
+    <div class="selector-fecha">
+        <form method="GET">
+            <label>Fecha:</label>
+            <select name="fecha" onchange="this.form.submit()">
+                {% for f in fechas_reservas %}
+                    <option value="{{ f.fecha }}" {% if f.fecha == fecha %}selected{% endif %}>
+                        {{ f.fecha }}
+                    </option>
+                {% endfor %}
+            </select>
+        </form>
+    </div>
+
+    <h3>Reservas para el {{ fecha }}</h3>
+
+    <ul class="lista-panel">
+        {% for r in reservas %}
+            <li class="{% if r.estado == 'cancelada' %}cancelada{% elif r.fecha < hoy %}pasada{% else %}confirmada{% endif %}">
+                <span><strong>{{ r.hora_inicio }}</strong> - {{ r.nombre_cancha }} - Cliente: {{ r.nombre_usuario }} - Cédula: {{ r.cedula }} - Tel: {{ r.telefono }} - Estado: {{ r.estado }}</span>
+
+                {% if r.estado != "cancelada" and r.fecha >= hoy %}
+                    <form method="POST" action="{{ url_for('admin.cancelar_reserva', id=r.id) }}">
+                        <button type="submit" class="btn-cancelar">Cancelar</button>
+                    </form>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+
+    {% if not reservas %}
+        <p class="sin-datos">No hay reservas para esta fecha.</p>
+    {% endif %}
+
+    <h3>Bloqueos para el {{ fecha }}</h3>
+
+    <ul class="lista-panel">
+        {% for b in bloqueos %}
+            <li class="bloqueo">
+                <span><strong>{{ b.hora_inicio }} - {{ b.hora_fin }}</strong> - {{ b.nombre_cancha }} - Motivo: {{ b.motivo }}</span>
+                <form method="POST" action="{{ url_for('admin.eliminar_bloqueo', id=b.id) }}">
+                    <button type="submit" class="btn-cancelar">Eliminar</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+
+    {% if not bloqueos %}
+        <p class="sin-datos">No hay bloqueos para esta fecha.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block titulo %}{{ cancha.nombre }}{% endblock %}
+
+{% block contenido %}
+<div class="detalle-cancha">
+    <img src="{{ url_for('static', filename='img/' + cancha.foto) }}" alt="{{ cancha.nombre }}">
+    <h2>{{ cancha.nombre }}</h2>
+    <p>
+        Cancha de {{ cancha.tipo }} con piso {{ cancha.piso }},
+        {% if cancha.techo %}con techo{% else %}sin techo{% endif %}
+    </p>
+    <p>Precio: ${{ cancha.precio }}</p>
+
+    <div class="selector-fecha">
+        <form method="GET">
+            <label>Selecciona una fecha:</label>
+            <input type="date" name="fecha" value="{{ fecha }}" min="{{ hoy }}" onchange="this.form.submit()">
+        </form>
+    </div>
+
+    <h3>Horarios para el {{ fecha }}</h3>
+
+    <ul class="grilla-horarios">
+    {% for hora, estado in horarios %}
+        {% if estado == "disponible" %}
+            <li class="disponible">
+                <a href="{{ url_for('cliente.confirmar_reserva', id=cancha.id, fecha=fecha, hora=hora) }}">
+                    {{ hora }}
+                </a>
+            </li>
+        {% elif estado == "pasado" %}
+            <li class="pasado">{{ hora }}</li>
+        {% else %}
+            <li class="ocupado">{{ hora }}</li>
+        {% endif %}
+    {% endfor %}
+    </ul>
+</div>
+{% endblock %}

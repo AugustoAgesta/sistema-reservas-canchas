@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block titulo %}Confirmar reserva{% endblock %}
+
+{% block contenido %}
+    <h2>Confirmar reserva</h2>
+
+    <form method="POST">
+        <input type="hidden" name="id_cancha" value="{{ cancha.id }}">
+        <input type="hidden" name="fecha" value="{{ fecha }}">
+        <input type="hidden" name="hora" value="{{ hora }}">
+
+        <label>Cédula de identidad:</label>
+        <input type="text" name="cedula" pattern="[0-9]{6,9}" title="Solo números, entre 6 y 9 dígitos" required>
+
+        <label>Teléfono:</label>
+        <input type="text" name="telefono" pattern="[0-9]{7,12}" title="Solo números, más de 6 dígitos" required>
+        <small style="color: #888;">Datos de contacto simulados - no se realiza ninguna verificación real</small>
+
+        <label>
+            <input type="checkbox" name="pago_web"> Pagar por web (5% de descuento)
+        </label>
+
+        <small style="color: #888;">Simulado - no se procesa ningún pago real</small>
+
+        <button type="submit">Confirmar reserva</button>
+    </form>
+{% endblock %}

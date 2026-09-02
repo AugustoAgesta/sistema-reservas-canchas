@@ -1,0 +1,24 @@
+
+{% extends "base.html" %}
+
+{% block titulo %}Iniciar sesión{% endblock %}
+
+{% block contenido %}
+    <h2>Iniciar sesión</h2>
+
+    {% if error %}
+        <p style="color: #c94444; text-align: center; font-weight: 600;">{{ error }}</p>
+    {% endif %}
+
+    <div class="form-grande">
+        <form method="POST">
+            <label>Email:</label>
+            <input type="text" name="email" required>
+
+            <label>Contraseña:</label>
+            <input type="password" name="contrasena" required>
+
+            <button type="submit">Ingresar</button>
+        </form>
+    </div>
+{% endblock %}

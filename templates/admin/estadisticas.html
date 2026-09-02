@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block titulo %}Estadísticas{% endblock %}
+
+{% block contenido %}
+<div class="panel-admin">
+    <h2>Estadísticas del negocio</h2>
+
+    <div class="grilla-stats">
+        <div class="stat-card stat-rojo">
+            <span class="stat-numero">{{ total_reservas }}</span>
+            <span class="stat-label">Reservas confirmadas</span>
+        </div>
+
+        {% if mas_reservada %}
+            <div class="stat-card stat-azul">
+                <span class="stat-numero">{{ mas_reservada.nombre }}</span>
+                <span class="stat-label">Cancha más reservada ({{ mas_reservada.total }} veces)</span>
+            </div>
+        {% endif %}
+
+        <div class="stat-card stat-verde">
+            <span class="stat-numero">${{ ingresos_totales }}</span>
+            <span class="stat-label">Ingresos totales estimados</span>
+        </div>
+    </div>
+
+    {% if not mas_reservada %}
+        <p class="sin-datos">Todavía no hay datos suficientes.</p>
+    {% endif %}
+</div>
+{% endblock %}

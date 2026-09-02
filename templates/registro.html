@@ -1,0 +1,26 @@
+{%extends "base.html" %}
+
+{% block titulo %}Registro {%endblock%}
+
+{%block contenido%}
+    <h2>Registrar</h2>
+    <div class="form-grande">
+        <form method='POST'>
+
+            <label>Nombre:</label>
+            <input type="text" name="nombre" required>
+
+            <label>Email:</label>
+            <input type="text" name="email" required>
+
+            <label>Contraseña:</label>
+            <input type="password" name="contraseña" required>
+
+            <label>Teléfono:</label>
+            <input type="text" name="telefono" pattern="[0-9]{7,12}" title="Solo números, más de 6 dígitos" required>
+            <small style="color: #888;">Dato simulado - no se realiza ninguna verificación real</small>
+
+            <button type="submit">Registrar</button>
+        </form>
+    </div>
+{%endblock%}
