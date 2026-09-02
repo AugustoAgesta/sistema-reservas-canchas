@@ -53,14 +53,16 @@ Antes de programar, diseñé el sistema completo en papel/texto y paint: entidad
 
 El proyecto sigue una arquitectura en capas:
 
+```
 sistema-reservas-canchas/
-app.py
-database/ # Conexión y schema de la base de datos
-logica/ # Lógica de negocio (disponibilidad de horarios)
-routes/ # Rutas de Flask (cliente y admin)
-templates/ # Vistas HTML (Jinja2)
-static/ # CSS, JS e imágenes
-utils/ # Decoradores de autenticación
+    app.py
+    database/       # Conexión y schema de la base de datos
+    logica/         # Lógica de negocio (disponibilidad de horarios)
+    routes/         # Rutas de Flask (cliente y admin)
+    templates/      # Vistas HTML (Jinja2)
+    static/         # CSS, JS e imágenes
+    utils/          # Decoradores de autenticación
+```
 
 
 ## Cómo correrlo
