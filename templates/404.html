@@ -1,11 +1,5 @@
-{% extends "base.html" %}
-
-{% block titulo %}Página no encontrada{% endblock %}
-
-{% block contenido %}
-<div class="pagina-404">
-    <img src="{{ url_for('static', filename='img/404.png') }}" alt="Página no encontrada" class="img-404">
-    <h2>⚽ 404</h2>
-    <a href="{{ url_for('cliente.index') }}" class="btn-agregar">Volver al inicio</a>
-</div>
-{% endblock %}
+{% extends "base.html" %}{% from 'ui.html' import icono %}{% block titulo %}{{ codigo }}{% endblock %}
+{% block contenido %}<div class="contenedor pagina"><section class="error-pagina"><strong>{{ codigo }}</strong>
+  <h1>{{ {400:'Revisá el formulario',403:'Acceso de administración',404:'Esta página quedó fuera de juego'}[codigo] }}</h1>
+  <p>{{ detalle if codigo==400 else 'La gestión del complejo requiere una cuenta de administrador.' if codigo==403 else 'El enlace cambió o la cancha ya no está disponible.' }}</p>
+  <a class="btn lima" href="{{ url_for('cliente.index') }}">Volver a canchas {{ icono("arrow") }}</a>{% if codigo==403 %}<a class="link-claro" href="{{ url_for('admin.demo') }}">Ver agenda de ejemplo</a>{% endif %}</section></div>{% endblock %}

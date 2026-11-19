@@ -1,40 +1,35 @@
-{% extends "base.html" %}
-
-{% block titulo %}{{ cancha.nombre }}{% endblock %}
-
-{% block contenido %}
-<div class="detalle-cancha">
-    <img src="{{ url_for('static', filename='img/' + cancha.foto) }}" alt="{{ cancha.nombre }}">
-    <h2>{{ cancha.nombre }}</h2>
-    <p>
-        Cancha de {{ cancha.tipo }} con piso {{ cancha.piso }},
-        {% if cancha.techo %}con techo{% else %}sin techo{% endif %}
-    </p>
-    <p>Precio: ${{ cancha.precio }}</p>
-
-    <div class="selector-fecha">
-        <form method="GET">
-            <label>Selecciona una fecha:</label>
-            <input type="date" name="fecha" value="{{ fecha }}" min="{{ hoy }}" onchange="this.form.submit()">
-        </form>
-    </div>
-
-    <h3>Horarios para el {{ fecha }}</h3>
-
-    <ul class="grilla-horarios">
-    {% for hora, estado in horarios %}
-        {% if estado == "disponible" %}
-            <li class="disponible">
-                <a href="{{ url_for('cliente.confirmar_reserva', id=cancha.id, fecha=fecha, hora=hora) }}">
-                    {{ hora }}
-                </a>
-            </li>
-        {% elif estado == "pasado" %}
-            <li class="pasado">{{ hora }}</li>
-        {% else %}
-            <li class="ocupado">{{ hora }}</li>
-        {% endif %}
-    {% endfor %}
-    </ul>
-</div>
-{% endblock %}
+{% extends "base.html" %}{% from 'ui.html' import volver,icono,ficha %}
+{% block titulo %}{{ cancha.nombre|nombre_cancha }}{% endblock %}
+{% block contenido %}<div class="contenedor pagina">{{ volver('Volver a canchas',url_for('cliente.index',fecha=fecha,_anchor='canchas')) }}
+  <div class="detalle-grid">
+    <section class="detalle-foto">
+      <img class="foto-grande"
+           src="{{ imagen_cancha(cancha) }}"
+           alt="{{ cancha.nombre|nombre_cancha }}">
+      <div class="detalle-texto">
+        <div class="subformato">{{ icono("pitch") }}{{ tipos.get(cancha.tipo,cancha.tipo) }}</div>
+        <h1>{{ cancha.nombre|nombre_cancha }}</h1>
+        <div class="atributos">{{ ficha(cancha) }}<span>{{ icono("clock") }}60 minutos</span></div>
+        <p class="precio">{{ cancha.precio|moneda }} <small>UYU / hora</small></p>
+      </div>
+    </section>
+    <section class="panel turnos">
+      <h2>Elegí tu turno</h2>
+      <p>Consultá una fecha y seleccioná un horario libre.</p>
+      <form class="form-fecha" method="get">
+        <label for="fecha">Fecha de juego</label>
+        <div class="linea">
+          <input id="fecha"
+                 type="date"
+                 name="fecha"
+                 min="{{ hoy }}"
+                 value="{{ fecha }}"
+                 required><button class="btn suave" type="submit">Consultar</button>
+        </div>
+      </form>
+      <nav class="semana" aria-label="Próximos siete días">{% for dia in dias %}<a href="{{ url_for('cliente.detalle_cancha',id=cancha.id,fecha=dia.isoformat()) }}"
+                                                                                   aria-label="{{ dia.isoformat()|fecha_texto }}"
+                                                                                   {% if dia.isoformat()==fecha %}aria-current="date"{% endif %}><small>{{ 'Hoy' if loop.first else nombres_dias[dia.weekday()][:3] }}</small><b>{{ dia.day }}</b></a>{% endfor %}</nav>
+      <h3 class="fecha-larga">{{ fecha|fecha_texto }}</h3>
+      <div class="horarios">{% for hora,estado in horarios %}{% if estado=="disponible" %}<a href="{{ url_for('cliente.confirmar_reserva',id=cancha.id,fecha=fecha,hora=hora) }}"><strong>{{ hora }}</strong><small>Libre</small></a>{% else %}<span class="slot {{ estado }}"><strong>{{ hora }}</strong><small>{{ {'pasado':'Finalizado','bloqueado':'Bloqueado','ocupado':'Reservado'}[estado] }}</small></span>{% endif %}{% endfor %}</div>
+      {% if not horarios|selectattr("1","equalto","disponible")|list %}<p class="nota">Se ocuparon o finalizaron todos los turnos. Probá con otra fecha.</p>{% endif %}</section></div></div>{% endblock %}

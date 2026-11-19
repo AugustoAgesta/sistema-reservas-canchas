@@ -1,0 +1,15 @@
+{% extends "base.html" %}{% from 'ui.html' import icono, token, volver %}
+{% block contenido %}<div class="contenedor pagina">{{ volver('Volver a canchas',url_for('cliente.index')) }}
+  <div class="acceso-grid">
+    <aside class="acceso-foto" aria-hidden="true">
+    </aside>
+    <section class="acceso-panel">
+      <div>
+        {% block encabezado %}{% endblock %}
+      </div>
+      {% if destino.siguiente=="reserva" %}<p class="nota">{{ icono("ticket") }} Turno seleccionado · {{ destino.fecha }} · {{ destino.hora }} h</p>{% endif %}
+      {% block campos %}{% endblock %}
+    </section>
+  </div>
+  </div>
+{% endblock %}

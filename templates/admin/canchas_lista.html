@@ -1,24 +1,4 @@
-{% extends "base.html" %}
-
-{% block titulo %}Gestión de canchas{% endblock titulo %}
-
-{% block contenido %}
-<div class="panel-admin">
-    <h2>Canchas registradas</h2>
-
-    <div class="selector-fecha">
-        <a href="{{ url_for('admin.nueva_cancha') }}" class="btn-agregar">Agregar cancha</a>
-    </div>
-
-    <ul class="lista-panel">
-        {% for c in canchas %}
-            <li class="{% if c.activa %}confirmada{% else %}cancelada{% endif %}">
-                <span>{{ c.nombre }} - {{ c.tipo }} - {{ c.piso }} - ${{ c.precio }} - {% if c.activa %}Activa{% else %}Inactiva{% endif %}</span>
-                <a href="{{ url_for('admin.editar_cancha', id=c.id) }}" class="btn-cancelar" style="background-color: var(--verde-principal);">Gestionar</a>
-            </li>
-        {% endfor %}
-    </ul>
-</div>
-{% endblock contenido %}
-
-
+{% extends "base.html" %}{% from 'ui.html' import menu_admin,icono,estado,vacio %}{% block titulo %}Gestión de canchas{% endblock %}
+{% block contenido %}<div class="contenedor pagina admin">{{ menu_admin("canchas") }}<div class="cab-pagina con-accion"><div><h1>Gestión de canchas</h1><p>Administrá las fichas, las tarifas por hora y la visibilidad del catálogo.</p></div><a class="btn oscuro" href="{{ url_for('admin.nueva_cancha') }}">{{ icono("plus") }} Agregar cancha</a></div>
+  {% for c in canchas %}<article class="reserva-fila"><img src="{{ imagen_cancha(c) }}" alt=""><div><h3>{{ c.nombre|nombre_cancha }}</h3><p>{{ tipos.get(c.tipo,c.tipo) }} · {{ pisos.get(c.piso,c.piso) }} · {{ c.precio|moneda }} / hora</p></div><div class="acciones-reserva">{{ estado('activa' if c.activa else 'inactiva') }}<a class="turno-link"
+                                                                                                                                                                                                                                                                                                                                       href="{{ url_for('admin.editar_cancha',id=c.id) }}">{{ icono("edit") }} Editar</a></div></article>{% else %}{{ vacio('El catálogo está vacío', 'Agregá una cancha para recibir reservas.', 'pitch') }}{% endfor %}</div>{% endblock %}

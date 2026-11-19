@@ -1,74 +1,52 @@
+{% from 'ui.html' import icono, marca, token with context %}
 <!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>{% block titulo %}Canchas{% endblock %}</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
-</head>
-<body>
-    <header>
-    <h1>
-        <a href="{{ url_for('cliente.index') }}" class="logo-link">
-            {% if request.endpoint == 'cliente.index' %}
-                ⚽ Sistema de Reservas de Canchas
-            {% else %}
-                ⚽
-            {% endif %}
-        </a>
-    </h1>
-
-       <nav>
-            <div class="nav-izquierda">
-                <a href="{{ url_for('cliente.index') }}">Inicio</a>
-
-                {% if usuario_sesion %}
-                    {% if usuario_sesion.es_admin %}
-                        <a href="{{ url_for('admin.panel') }}">Panel</a>
-                        <a href="{{ url_for('admin.listar_canchas') }}">Listado de canchas</a>
-                        <a href="{{ url_for('admin.nuevo_bloqueo') }}">Gestionar bloqueos</a>
-                        <a href="{{ url_for('admin.estadisticas')}}">Estadisticas</a>
-                    {% endif %}
-                    <a href="{{ url_for('cliente.perfil') }}">Mi perfil</a>
-                    <a href="{{ url_for('cliente.logout') }}" onclick="return confirm('¿Seguro que querés cerrar sesión?')">Cerrar sesión</a>
-                {% else %}
-                    {% if request.endpoint != 'cliente.login' %}
-                        <a href="{{ url_for('cliente.login') }}">Iniciar sesión</a>
-                    {% endif %}
-                    {% if request.endpoint != 'cliente.registro' %}
-                        <a href="{{ url_for('cliente.registro') }}">Registrarse</a>
-                    {% endif %}
-                {% endif %}
-            </div>
-
-            {% if usuario_sesion %}
-                <div class="nav-usuario">
-                    <span class="icono-usuario">👤</span>
-                    <span class="{% if usuario_sesion.es_admin %}texto-admin{% endif %}">Hola, {{ usuario_sesion.nombre }}</span>
-                </div>
-            {% endif %}
+<html lang="es-UY">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#17392e">
+    <meta name="description"
+          content="Consultá las canchas, elegí un horario y reservá tu próximo partido de fútbol.">
+    <title>{% block titulo %}Canchas{% endblock %} · Entretiempo</title>
+    <link rel="icon"
+          href="{{ url_for('static',filename='img/marca.svg') }}"
+          type="image/svg+xml">
+    <link rel="stylesheet"
+          href="{{ url_for('static',filename='css/estilos.css') }}">
+    <script defer src="{{ url_for('static',filename='js/interfaz.js') }}"></script>
+  </head>
+  <body>
+    <a class="saltar" href="#contenido">Saltar al contenido</a>
+    <header class="cabecera">
+      <div class="contenedor barra">
+        <a class="inicio"
+           href="{{ url_for('cliente.index') }}"
+           aria-label="Entretiempo, inicio">{{ marca() }}</a>
+        {% set ruta = request.endpoint or '' %}
+        <nav class="principal" aria-label="Principal">
+          <a href="{{ url_for('cliente.index') }}"
+             {% if ruta in ('cliente.index','cliente.detalle_cancha','cliente.confirmar_reserva') %}aria-current="page"{% endif %}>Canchas</a>
+          <a href="{{ url_for('cliente.perfil') }}"
+             {% if ruta=='cliente.perfil' %}aria-current="page"{% endif %}>Mis reservas</a>
+          {% if not usuario_sesion or usuario_sesion.es_admin %}<a href="{{ url_for('admin.panel') }}"
+                                                                   {% if ruta.startswith('admin.') or request.args.get('siguiente')=='admin' %}aria-current="page"{% endif %}>Administración</a>{% endif %}
         </nav>
-    </header>
-
-    {% with mensajes = get_flashed_messages(with_categories=true) %}
-        {% if mensajes %}
-            {% for categoria, mensaje in mensajes %}
-                <div class="flash-{{ categoria }}">
-                    {{ mensaje }}
-                </div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-
-    <main>
-        {% block contenido %}{% endblock %}
-    </main>
-
-    <footer>
-        <p>&copy; 2026 - Desarrollado por Augusto Agesta</p>
-    </footer>
+        <div class="cuenta">{% if usuario_sesion %}<a href="{{ url_for('cliente.perfil') }}"
+                                                      class="persona"
+                                                      title="Mi perfil">{{ icono("person") }}<span>{{ usuario_sesion.nombre.split()|first }}</span></a><form method="post" action="{{ url_for('cliente.logout') }}">{{ token() }}<button class="btn-icon"
+                                                                                                                                                                                                                                         type="submit"
+                                                                                                                                                                                                                                         aria-label="Cerrar sesión"
+                                                                                                                                                                                                                                         title="Cerrar sesión">{{ icono("exit") }}</button></form>
+        {% else %}<a class="enlace-login" href="{{ url_for('cliente.login') }}">Ingresar</a><a class="btn oscuro compacto" href="{{ url_for('cliente.registro') }}">Crear cuenta {{ icono("arrow") }}</a>{% endif %}</div>
+    </div>
+  </header>
+  <main id="contenido" tabindex="-1">
+    {% with mensajes=get_flashed_messages(with_categories=true) %}{% if mensajes %}<div class="contenedor avisos">{% for categoria,mensaje in mensajes %}<div class="aviso {{ categoria }}"
+                                                                                                                                                              role="{{ 'alert' if categoria=='error' else 'status' }}">{{ icono('info' if categoria=='error' else 'check') }}{{ mensaje }}</div>{% endfor %}</div>{% endif %}{% endwith %}
+    {% block contenido %}{% endblock %}
+  </main>
+  <footer>
+    <div class="contenedor pie"><a class="inicio" href="{{ url_for('cliente.index') }}">{{ marca() }}</a><span>Sistema de reservas de canchas</span><small>Desarrollado por Augusto Agesta</small></div>
+  </footer>
 </body>
 </html>
-

@@ -1,28 +1,40 @@
-{% extends "base.html" %}
-
+{% extends "base.html" %}{% from 'ui.html' import volver,icono,token %}
 {% block titulo %}Confirmar reserva{% endblock %}
-
-{% block contenido %}
-    <h2>Confirmar reserva</h2>
-
-    <form method="POST">
-        <input type="hidden" name="id_cancha" value="{{ cancha.id }}">
-        <input type="hidden" name="fecha" value="{{ fecha }}">
-        <input type="hidden" name="hora" value="{{ hora }}">
-
-        <label>Cédula de identidad:</label>
-        <input type="text" name="cedula" pattern="[0-9]{6,9}" title="Solo números, entre 6 y 9 dígitos" required>
-
-        <label>Teléfono:</label>
-        <input type="text" name="telefono" pattern="[0-9]{7,12}" title="Solo números, más de 6 dígitos" required>
-        <small style="color: #888;">Datos de contacto simulados - no se realiza ninguna verificación real</small>
-
+{% block contenido %}<div class="contenedor pagina">{{ volver('Cambiar horario',url_for('cliente.detalle_cancha',id=cancha.id,fecha=fecha)) }}
+  <div class="cab-pagina">
+    <h1>Confirmá tu reserva</h1>
+    <p>Revisá el turno y completá los datos de contacto.</p>
+  </div>
+  <div class="dos-columnas">
+    <form method="post" class="panel formulario">
+      {{ token() }}<input type="hidden" name="id_cancha" value="{{ cancha.id }}"><input type="hidden" name="fecha" value="{{ fecha }}"><input type="hidden" name="hora" value="{{ hora }}">
+      <h2>Datos del jugador</h2>
+      <div class="dos-campos">
         <label>
-            <input type="checkbox" name="pago_web"> Pagar por web (5% de descuento)
-        </label>
-
-        <small style="color: #888;">Simulado - no se procesa ningún pago real</small>
-
-        <button type="submit">Confirmar reserva</button>
-    </form>
-{% endblock %}
+          Cédula de identidad<input name="cedula"
+                                    inputmode="numeric"
+                                    pattern="[0-9]{6,9}"
+                                    title="Entre 6 y 9 dígitos"
+                                    required
+                                    maxlength="9"
+                                    value="{{ request.form.get('cedula', '') }}"></label><label>Teléfono<input name="telefono"
+                                                                                                              type="tel"
+                                                                                                              autocomplete="tel"
+                                                                                                              pattern="[0-9]{7,12}"
+                                                                                                              title="Entre 7 y 12 dígitos"
+                                                                                                              required
+                                                                                                              maxlength="12"
+                                                                                                              value="{{ request.form.get('telefono',usuario_sesion.telefono or '') }}">
+          </label>
+        </div>
+        <p class="ayuda">Ingresá solo números. Para probar el proyecto, podés usar datos ficticios.</p>
+        <fieldset><legend>Forma de pago</legend><label class="opcion"><input type="checkbox"
+                                                                             name="pago_web"
+                                                                             id="pago-web"
+                                                                             {% if request.form.get('pago_web') %}checked{% endif %}><span>Usar pago web simulado<small>Aplica un 5 % de descuento. El simulador no realiza cobros.</small></span></label></fieldset>
+        <button class="btn oscuro">Confirmar reserva {{ icono("check") }}</button>
+      </form>
+      <aside class="comprobante"><img src="{{ imagen_cancha(cancha) }}" alt=""><div><h2>{{ cancha.nombre|nombre_cancha }}</h2><p>{{ icono("calendar") }} {{ fecha|fecha_texto }}</p><p>{{ icono("clock") }} {{ hora }} a {{ fin_turno(hora) }} · 60 minutos</p><div class="total"><span>Total en UYU</span><strong id="importe"
+                                                                                                                                                                                                                                                                                                                   aria-live="polite"
+                                                                                                                                                                                                                                                                                                                   data-base="{{ cancha.precio|moneda }}"
+                                                                                                                                                                                                                                                                                                                   data-web="{{ (cancha.precio * 0.95)|round(2)|moneda }}">{{ ((cancha.precio * 0.95)|round(2) if request.form.get('pago_web') else cancha.precio)|moneda }}</strong></div><noscript><small>Con pago web, el total es {{ (cancha.precio * 0.95)|round(2)|moneda }}.</small></noscript></div></aside></div></div>{% endblock %}

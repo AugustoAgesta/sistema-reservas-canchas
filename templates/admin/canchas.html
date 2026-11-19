@@ -1,39 +1,34 @@
-{% extends "base.html" %}
-
-{% block titulo %}Agregar cancha{% endblock %}
-
-{% block contenido %}
-    <h2>Agregar nueva cancha</h2>
-
-    <form method="POST">
-        <label>Nombre:</label>
-        <input type="text" name="nombre" required>
-
-        <label>Tipo:</label>
-        <select name="tipo">
-            <option value="Fut 11">Fut 11</option>
-            <option value="Fut 5">Fut 5</option>
-            <option value="Futsal">Futsal</option>
-        </select>
-
-        <label>Piso:</label>
-        <select name="piso">
-            <option value="sintetico">Sintético</option>
-            <option value="natural">Natural</option>
-            <option value="madera">Madera</option>
-        </select>
-
-        <label>
-            <input type="checkbox" name="techo"> Techada
-        </label>
-
-        <label>Precio:</label>
-        <input type="number" name="precio" required>
-
-        <label>Nombre del archivo de foto (ej: cancha1.jpg):</label>
-        <input type="text" name="foto" placeholder="cancha1.jpg">
-
-        <button type="submit">Guardar cancha</button>
-    </form>
-{% endblock %}
-
+{% extends "base.html" %}{% from 'ui.html' import menu_admin,token,volver,icono %}{% block titulo %}{{ 'Editar cancha' if cancha else 'Agregar cancha' }}{% endblock %}
+{% block contenido %}<div class="contenedor pagina admin">{{ menu_admin("canchas") }}{{ volver('Volver al listado',url_for('admin.listar_canchas')) }}
+  <div class="cab-pagina">
+    <h1>{{ 'Editar cancha' if cancha else 'Agregar cancha' }}</h1>
+    <p>Estos datos se muestran al jugador antes de reservar.</p>
+  </div>
+  <form method="post" class="panel formulario ancho-form">
+    {{ token() }}
+    <label>
+      Nombre de la cancha<input name="nombre"
+                                value="{{ valores.get('nombre', '') }}"
+                                maxlength="100"
+                                required>
+    </label>
+    <div class="dos-campos"><label>Formato<select name="tipo">{% for k,v in tipos.items() %}<option value="{{ k }}" {% if valores.get('tipo')==k %}selected{% endif %}>{{ v }}</option>{% endfor %}</select></label>
+      <label>Superficie<select name="piso">{% for k,v in pisos.items() %}<option value="{{ k }}" {% if valores.get('piso')==k %}selected{% endif %}>{{ v }}</option>{% endfor %}</select></label></div>
+    <label>
+      Tarifa por hora (UYU)<input type="number"
+                                  min="0.01"
+                                  max="99999999"
+                                  step="0.01"
+                                  name="precio"
+                                  value="{{ valores.get('precio', '') }}"
+                                  required>
+    </label>
+    <label>Fotografía<select name="foto"><option value="">Usar foto del formato</option>{% for foto in fotos %}<option value="{{ foto }}"
+                                                                                                                       {% if valores.get('foto')==foto %}selected{% endif %}>{{ foto }}</option>{% endfor %}</select></label>
+    <label class="opcion"><input type="checkbox"
+                                 name="techo"
+                                 {% if valores.get('techo') %}checked{% endif %}>Cancha techada</label>
+    {% if cancha %}<label class="opcion"><input type="checkbox"
+                                                name="activa"
+                                                {% if valores.get('activa') %}checked{% endif %}><span>Activa en el catálogo<small>Al desactivarla se oculta para nuevas reservas.</small></span></label>{% endif %}
+    <button class="btn oscuro">Guardar cancha {{ icono("check") }}</button></form></div>{% endblock %}

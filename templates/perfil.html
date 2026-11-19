@@ -1,20 +1,9 @@
-{% extends "base.html" %}
-
-{% block titulo %}Perfil Usuario{% endblock  %}
-
-{% block  contenido%}
-    <h2>Historial de reservas</h2>
-
-    <h3>Reservas de {{ usuario_sesion.nombre }}</h3>
-    <ul class="lista-reservas-perfil">
-        {% for r in reservas %}
-            <li class="{% if r.estado == 'cancelada' %}cancelada{% elif r.fecha < hoy %}pasada{% else %}confirmada{% endif %}">
-                {{ r.fecha }} - {{ r.hora_inicio }}hs - {{ r.nombre_cancha }} - Estado: {{ r.estado }}
-            </li>
-        {% endfor %}
-    </ul>
-    
-    {% if not reservas %}
-        <p>Aún no hay reservas para este usuario.</p>
-    {% endif %}
-{% endblock  contenido%}
+{% extends "base.html" %}{% from 'ui.html' import icono, vacio, estado, token %}
+{% block titulo %}Mis reservas{% endblock %}
+{% block contenido %}<div class="contenedor pagina"><div class="cab-pagina con-accion"><div><h1>Mis reservas</h1><p>{{ usuario_sesion.nombre }} · {{ usuario_sesion.email }}</p></div><a class="btn oscuro"
+                                                                                                                                                                                         href="{{ url_for('cliente.index',_anchor='canchas') }}">{{ icono("plus") }} Reservar un turno</a></div>
+  <section class="seccion">
+    <h2>Próximos partidos <small>{{ proximas|length }}</small></h2>
+  {% for r in proximas %}<article class="reserva-fila"><img src="{{ imagen_cancha(r) }}" alt=""><div><span class="fecha-larga">{{ r.fecha|fecha_texto }}</span><h3>{{ r.nombre_cancha|nombre_cancha }}</h3><p>{{ r.hora_inicio }} a {{ fin_turno(r.hora_inicio) }} · {{ r.precio_final|moneda }}</p></div><div class="acciones-reserva">{{ estado(r.estado) }}<details class="confirmacion"><summary>Cancelar reserva</summary><form method="post"
+                                                                                                                                                                                                                                                                                                                                                                                                                                     action="{{ url_for('cliente.cancelar_reserva',id=r.id) }}">{{ token() }}<small>Se liberará este turno.</small><button class="btn peligro compacto">Sí, cancelar</button></form></details></div></article>{% else %}{{ vacio('Todavía no tenés partidos agendados', 'Elegí una cancha y un horario para hacer tu primera reserva.', 'ticket') }}{% endfor %}</section>
+  <section class="seccion"><h2>Historial</h2>{% for r in historial %}<article class="fila"><div><h3>{{ r.nombre_cancha|nombre_cancha }}</h3><p>{{ r.fecha|fecha_texto }} · {{ r.hora_inicio }} h · {{ r.precio_final|moneda }}</p></div>{{ estado('cancelada' if r.estado=='cancelada' else 'pasado') }}</article>{% else %}{{ vacio('Tu historial está vacío', 'Acá vas a ver los turnos finalizados y las reservas canceladas.', 'clock') }}{% endfor %}</section></div>{% endblock %}

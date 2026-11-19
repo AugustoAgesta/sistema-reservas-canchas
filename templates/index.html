@@ -1,22 +1,56 @@
-{% extends "base.html" %}
-
-{% block titulo %}Inicio - Canchas{% endblock %}
-
+{% extends "base.html" %}{% from 'ui.html' import icono, ficha, vacio %}
+{% block titulo %}Reservá tu cancha{% endblock %}
 {% block contenido %}
-    <h2>Canchas disponibles</h2>
-
-    <div class="lista-canchas">
-        {% for cancha in canchas %}
-            <div class="tarjeta-cancha">
-                <img src="{{ url_for('static', filename='img/' + cancha.foto) }}" alt="{{ cancha.nombre }}">
-               <h3><a href="{{ url_for('cliente.detalle_cancha', id=cancha.id) }}">{{ cancha.nombre }}</a></h3>
-                <p>
-                    Cancha de {{ cancha.tipo }} con piso {{ cancha.piso }}, 
-                    {% if cancha.techo %}con techo{% else %}sin techo{% endif %}
-                </p>
-                <p>Precio: ${{ cancha.precio }}</p>
-            </div>
-        {% endfor %}
+  <div class="contenedor portada">
+    <section class="hero">
+      <div class="foto-hero" aria-hidden="true"></div>
+      <div class="hero-texto">
+        <h1>
+          El próximo
+          <br>
+          <em>partido.</em>
+        </h1>
+        <p>
+          Elegí la cancha, encontrá tu horario
+          <br class="solo-amplio">
+          y reservá para tu equipo.
+        </p>
+        <a class="btn lima" href="#canchas">Explorar canchas {{ icono("down") }}</a>
+      </div>
+    </section>
+    <section id="canchas" class="catalogo" aria-labelledby="titulo-catalogo">
+      <div class="cab-seccion">
+        <div>
+          <h2 id="titulo-catalogo">Encontrá tu cancha</h2>
+          <p>Consultá los turnos disponibles para el día que querés jugar.</p>
+        </div>
+        <form class="fecha-filtro"
+              method="get"
+              action="{{ url_for('cliente.index') }}#canchas"><label for="fecha">{{ icono("calendar") }} Fecha de juego</label><div><input id="fecha"
+                                                                                                                                           name="fecha"
+                                                                                                                                           type="date"
+                                                                                                                                           value="{{ fecha }}"
+                                                                                                                                           min="{{ hoy }}"
+                                                                                                                                           required>{% if tipo %}<input type="hidden" name="tipo" value="{{ tipo }}">{% endif %}<button class="btn-icon" aria-label="Consultar fecha" title="Consultar fecha">{{ icono("arrow") }}</button></div></form></div>
+      <div class="filtros"><nav class="pestanas" aria-label="Filtrar por formato">{% for valor in ['']+formatos %}<a href="{{ url_for('cliente.index',fecha=fecha,tipo=valor or none,_anchor='canchas') }}"
+                                                                                                                     {% if tipo==valor %}aria-current="true"{% endif %}>{{ tipos.get(valor, 'Todas') }}</a>{% endfor %}</nav><small>{{ canchas|length }} {{ 'cancha' if canchas|length==1 else 'canchas' }}</small></div>
+      {% if canchas %}
+        <div class="grilla-canchas">
+          {% for c in canchas %}
+            <article class="card-cancha"><a class="foto-card"
+                                            href="{{ url_for('cliente.detalle_cancha',id=c.id,fecha=fecha) }}"
+                                            aria-label="Ver horarios de {{ c.nombre|nombre_cancha }}"><img src="{{ imagen_cancha(c) }}"
+                                                                                                           alt="{{ c.nombre|nombre_cancha }}, {{ pisos.get(c.piso,c.piso)|lower }}"
+                                                                                                           width="600"
+                                                                                                           height="360"><span class="formato disponibilidad {{ 'sin-turnos' if not libres[c.id] }}"><i></i>{% if libres[c.id] %}{{ libres[c.id] }} {{ 'turno libre' if libres[c.id]==1 else 'turnos libres' }}{% else %}Sin turnos libres{% endif %}</span></a>
+              <div class="card-datos">{% if (c.nombre|nombre_cancha)!=tipos.get(c.tipo,c.tipo) %}<span class="tipo-cancha">{{ tipos.get(c.tipo,c.tipo) }}</span>{% endif %}
+                <h3><a href="{{ url_for('cliente.detalle_cancha',id=c.id,fecha=fecha) }}">{{ c.nombre|nombre_cancha }}</a></h3>
+                <div class="atributos">{{ ficha(c) }}</div>
+                <div class="card-pie"><span class="precio">{{ c.precio|moneda }} <small>/ hora</small></span><a class="turno-link"
+                                                                                                                href="{{ url_for('cliente.detalle_cancha',id=c.id,fecha=fecha) }}"
+                                                                                                                aria-label="Ver horarios de {{ c.nombre|nombre_cancha }}">Ver horarios {{ icono("arrow") }}</a></div>
+              </div>
+            </article>{% endfor %}</div>{% else %}{{ vacio('No hay canchas para mostrar', 'Probá con otro formato o volvé a consultar más adelante.', 'pitch') }}{% endif %}
+      </section>
     </div>
 {% endblock %}
-

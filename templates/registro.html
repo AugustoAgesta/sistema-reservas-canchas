@@ -1,26 +1,38 @@
-{%extends "base.html" %}
-
-{% block titulo %}Registro {%endblock%}
-
-{%block contenido%}
-    <h2>Registrar</h2>
-    <div class="form-grande">
-        <form method='POST'>
-
-            <label>Nombre:</label>
-            <input type="text" name="nombre" required>
-
-            <label>Email:</label>
-            <input type="text" name="email" required>
-
-            <label>Contraseña:</label>
-            <input type="password" name="contraseña" required>
-
-            <label>Teléfono:</label>
-            <input type="text" name="telefono" pattern="[0-9]{7,12}" title="Solo números, más de 6 dígitos" required>
-            <small style="color: #888;">Dato simulado - no se realiza ninguna verificación real</small>
-
-            <button type="submit">Registrar</button>
-        </form>
+{% extends "acceso_base.html" %}{% block titulo %}Crear cuenta{% endblock %}
+{% block encabezado %}<h1>Creá tu cuenta</h1><p>Guardá tus turnos y administrá tus reservas desde un mismo lugar.</p>{% endblock %}
+{% block campos %}<form method="post" class="formulario">{{ token() }}
+  <div class="dos-campos">
+    <label>
+      Nombre<input name="nombre"
+                   type="text"
+                   autocomplete="name"
+                   maxlength="100"
+                   required
+                   value="{{ request.form.get('nombre', '') }}"></label><label>Teléfono<input name="telefono"
+                                                                                             type="tel"
+                                                                                             autocomplete="tel"
+                                                                                             pattern="[0-9]{7,12}"
+                                                                                             title="Entre 7 y 12 dígitos, sin espacios"
+                                                                                             required
+                                                                                             value="{{ request.form.get('telefono', '') }}">
+      </label>
     </div>
-{%endblock%}
+    <label>
+      Correo electrónico<input name="email"
+                               type="email"
+                               autocomplete="email"
+                               required
+                               maxlength="254"
+                               value="{{ request.form.get('email', '') }}">
+    </label>
+    <label>
+      Contraseña<input name="contraseña"
+                       type="password"
+                       autocomplete="new-password"
+                       minlength="8"
+                       maxlength="256"
+                       required><small>Usá al menos 8 caracteres.</small>
+    </label>
+    <button class="btn oscuro" type="submit">Crear cuenta {{ icono("arrow") }}</button>
+  </form>
+  <p class="enlace-pie">¿Ya tenés cuenta? <a href="{{ url_for('cliente.login',**destino) }}">Ingresá</a></p>{% endblock %}

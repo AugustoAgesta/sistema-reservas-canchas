@@ -1,10 +1,16 @@
-#  Sistema de Reservas de Canchas
+# Entretiempo · Sistema de Reservas de Canchas
 
 Aplicación web para gestionar la reserva de canchas de fútbol, con roles diferenciados de cliente y administrador. Desarrollada en Python con Flask, HTML/CSS/JS y SQLite.
 
 Este es mi segundo proyecto de portfolio, como estudiante de 3er año de Licenciatura en Informática (Uruguay). A diferencia de mi primer proyecto (una app de escritorio), esta es mi primera aplicación web completa, desarrollada desde cero sin experiencia previa en HTML, CSS, JavaScript ni Flask.
 
 > **Nota de transparencia:** este proyecto lo construí con la ayuda de Claude (Anthropic) como asistente de programación, principalmente para aprender HTML/CSS/JS y Flask desde cero, resolver dudas de sintaxis y debuggear errores. La arquitectura, la lógica de negocio y las decisiones de diseño del sistema son mías.
+
+## Recorridos del portfolio
+
+Desde el catálogo podés comparar canchas, consultar la disponibilidad de una fecha y elegir un turno. Si necesitás ingresar o registrarte, se conserva el partido seleccionado. En **Mis reservas** podés revisar y cancelar tus próximos turnos.
+
+Desde **Administración** podés entrar con una cuenta del complejo o abrir la **agenda de ejemplo** en `/admin/demo`. Esta vista utiliza datos ficticios en memoria. El panel real permite gestionar la agenda, las canchas, los bloqueos y las estadísticas.
 
 ## Funcionalidades
 
@@ -13,10 +19,11 @@ Este es mi segundo proyecto de portfolio, como estudiante de 3er año de Licenci
 - Ver canchas disponibles con fotos, precio y descripción
 - Ver disponibilidad horaria por fecha, con estados visuales (disponible / ocupado / pasado)
 - Reservar un horario, con cédula, teléfono y opción de pago web (5% de descuento simulado)
-- Historial de reservas propio, con estado (confirmada / pasada / cancelada)
+- Próximos partidos e historial propio, con cancelación antes del inicio
+- Filtros por formato y fecha, disponibilidad actualizada y resumen del importe en pesos uruguayos
 
 **Administrador:**
-- Panel de reservas del día, filtrable por fecha
+- Agenda diaria por cancha y horario con navegación a cualquier fecha
 - Cancelación de reservas
 - Gestión de canchas (agregar, editar, activar/desactivar)
 - Bloqueo de horarios por mantenimiento o eventos, con eliminación
@@ -33,9 +40,11 @@ Este es mi segundo proyecto de portfolio, como estudiante de 3er año de Licenci
 | Página principal | Detalle de cancha |
 |---|---|
 | ![Principal](capturas/1.png) | ![Detalle](capturas/2.png) |
-| Confirmar reserva | Panel de administrador |
+| Confirmación de reserva | Agenda de ejemplo |
 |---|---|
 | ![Reserva](capturas/3.png) | ![Panel admin](capturas/4.png) |
+
+La portada utiliza una imagen editorial generada con IA. El catálogo conserva las fotografías originales de las canchas. La tipografía Barlow Condensed se distribuye localmente bajo la licencia incluida en `static/fonts/OFL.txt`.
 
 ## Proceso de diseño
 
@@ -88,7 +97,9 @@ SECRET_KEY=tu-clave-secreta-aca
 python app.py
 ```
 
-La base de datos se crea automáticamente la primera vez que se ejecuta.
+Abrí `http://127.0.0.1:5000/`. La primera ejecución crea la base con tres canchas de muestra. Al abrir una base anterior se incorpora el teléfono de la reserva. Para las reservas antiguas, el panel usa el contacto actual del perfil cuando está disponible.
+
+Para correr las pruebas de reserva simultánea, cancelación, bloqueos y migración, ejecutá `python -m unittest discover -s tests -v`. Las pruebas utilizan bases temporales. Para usar otra base local, configurá la variable de entorno `CANCHAS_DB` con su ruta.
 
 ### Crear una cuenta de administrador
 

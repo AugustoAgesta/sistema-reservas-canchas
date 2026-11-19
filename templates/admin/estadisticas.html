@@ -1,32 +1,11 @@
-{% extends "base.html" %}
-
-{% block titulo %}Estadísticas{% endblock %}
-
-{% block contenido %}
-<div class="panel-admin">
-    <h2>Estadísticas del negocio</h2>
-
-    <div class="grilla-stats">
-        <div class="stat-card stat-rojo">
-            <span class="stat-numero">{{ total_reservas }}</span>
-            <span class="stat-label">Reservas confirmadas</span>
-        </div>
-
-        {% if mas_reservada %}
-            <div class="stat-card stat-azul">
-                <span class="stat-numero">{{ mas_reservada.nombre }}</span>
-                <span class="stat-label">Cancha más reservada ({{ mas_reservada.total }} veces)</span>
-            </div>
-        {% endif %}
-
-        <div class="stat-card stat-verde">
-            <span class="stat-numero">${{ ingresos_totales }}</span>
-            <span class="stat-label">Ingresos totales estimados</span>
-        </div>
-    </div>
-
-    {% if not mas_reservada %}
-        <p class="sin-datos">Todavía no hay datos suficientes.</p>
-    {% endif %}
+{% extends "base.html" %}{% from 'ui.html' import menu_admin,icono,vacio %}{% block titulo %}Estadísticas{% endblock %}
+{% block contenido %}<div class="contenedor pagina admin">{{ menu_admin("stats") }}<div class="cab-pagina"><h1>Estadísticas del complejo</h1><p>Acumulado histórico de las reservas confirmadas.</p></div>
+<div class="marcador metricas">
+  <div>{{ icono("ticket") }}<span>Reservas confirmadas</span><strong>{{ total }}</strong></div>
+  <div>{{ icono("stats") }}<span>Ingresos estimados · UYU</span><strong>{{ importe|moneda }}</strong></div>
+  <div>{{ icono("pitch") }}<span>Cancha más reservada</span><strong>{{ ranking[0].nombre|nombre_cancha if total else 'Sin reservas' }}</strong></div>
 </div>
-{% endblock %}
+<section class="seccion"><h2>Reservas por cancha</h2>{% if total %}<div class="tabla-scroll"><table class="ranking"><thead><tr><th>Cancha</th><th>Reservas</th><th>Importe estimado</th></tr></thead><tbody>{% for c in ranking %}<tr><th scope="row">{{ c.nombre|nombre_cancha }}</th><td><div class="barra-ranking"><meter min="0"
+                                                                                                                                                                                                                                                                                                                             max="{{ ranking[0].cantidad }}"
+                                                                                                                                                                                                                                                                                                                             value="{{ c.cantidad }}"
+                                                                                                                                                                                                                                                                                                                             aria-label="Reservas de {{ c.nombre }}"></meter>{{ c.cantidad }}</div></td><td>{{ c.importe|moneda }}</td></tr>{% endfor %}</tbody></table></div>{% else %}{{ vacio('Aún no hay reservas confirmadas', 'Cuando se confirme la primera reserva, aparecerá el detalle por cancha.', 'stats') }}{% endif %}</section></div>{% endblock %}

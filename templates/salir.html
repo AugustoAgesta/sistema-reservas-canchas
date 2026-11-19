@@ -1,0 +1,1 @@
+{% extends "base.html" %}{% block titulo %}Cerrar sesión{% endblock %}{% block contenido %}<div class="contenedor pagina"><section class="panel angosto"><h1>Cerrar sesión</h1><p>Estás usando la cuenta de {{ usuario_sesion.nombre }}.</p><form method="post">{{ token() }}<button class="btn oscuro">Cerrar sesión</button></form></section></div>{% endblock %}

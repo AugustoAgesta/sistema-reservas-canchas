@@ -1,0 +1,19 @@
+{% macro icono(nombre) -%}
+  <svg class="icono" aria-hidden="true" focusable="false">
+    <use href="{{ url_for('static', filename='img/iconos.svg') }}#{{ nombre }}" />
+  </svg>
+{%- endmacro %}
+{% macro token() -%}
+  <input type="hidden" name="csrf" value="{{ csrf_token() }}">
+{%- endmacro %}
+{% macro marca() -%}<span class="marca"><img src="{{ url_for('static',filename='img/marca.svg') }}"
+                                             alt=""
+                                             width="38"
+                                             height="38"><span>Entretiempo</span></span>{%- endmacro %}
+{% macro volver(texto, destino) -%}<a class="volver"
+                                      href="{{ destino }}">{{ icono("back") }}{{ texto }}</a>{%- endmacro %}
+{% macro vacio(titulo, texto, icon='calendar') -%}<div class="vacio">{{ icono(icon) }}<div><h3>{{ titulo }}</h3><p>{{ texto }}</p></div></div>{%- endmacro %}
+{% macro estado(valor) -%}<span class="estado {{ valor }}"><i></i>{{ {'disponible':'Libre','ocupado':'Reservado','bloqueado':'Bloqueado','pasado':'Finalizado','cancelada':'Cancelada','confirmada':'Confirmada','pendiente':'Pendiente','activa':'Activa','inactiva':'Inactiva'}.get(valor,valor|capitalize) }}</span>{%- endmacro %}
+{% macro ficha(c) -%}<span>{{ icono("floor") }}{{ pisos.get(c.piso,c.piso) }}</span><span>{{ icono('roof' if c.techo else 'sun') }}{{ 'Techada' if c.techo else 'Al aire libre' }}</span>{%- endmacro %}
+{% macro menu_admin(actual) -%}<nav class="menu-admin" aria-label="Administración">{% for clave, titulo, icon, ruta in [('agenda','Agenda','calendar','admin.panel'),('canchas','Canchas','pitch','admin.listar_canchas'),('bloqueo','Bloquear horario','block','admin.nuevo_bloqueo'),('stats','Estadísticas','stats','admin.estadisticas')] %}<a href="{{ url_for(ruta) }}"
+                                                                                                                                                                                                                                                                                                                                                   {% if clave==actual %}aria-current="page"{% endif %}>{{ icono(icon) }}{{ titulo }}</a>{% endfor %}</nav>{%- endmacro %}

@@ -1,24 +1,19 @@
-
-{% extends "base.html" %}
-
-{% block titulo %}Iniciar sesión{% endblock %}
-
-{% block contenido %}
-    <h2>Iniciar sesión</h2>
-
-    {% if error %}
-        <p style="color: #c94444; text-align: center; font-weight: 600;">{{ error }}</p>
-    {% endif %}
-
-    <div class="form-grande">
-        <form method="POST">
-            <label>Email:</label>
-            <input type="text" name="email" required>
-
-            <label>Contraseña:</label>
-            <input type="password" name="contrasena" required>
-
-            <button type="submit">Ingresar</button>
-        </form>
-    </div>
-{% endblock %}
+{% extends "acceso_base.html" %}{% block titulo %}Ingresar{% endblock %}
+{% block encabezado %}<h1>{{ 'Administración' if destino.siguiente=='admin' else 'Ingresá a tu cuenta' }}</h1><p>{{ 'Ingresá con la cuenta del complejo para gestionar la agenda.' if destino.siguiente=='admin' else 'Accedé con el correo que usaste para registrarte.' }}</p>{% endblock %}
+{% block campos %}<form method="post" class="formulario">{{ token() }}
+  <label>
+    Correo electrónico<input name="email"
+                             type="email"
+                             autocomplete="username"
+                             required
+                             value="{{ request.form.get('email', '') }}">
+  </label>
+  <label>
+    Contraseña<input name="contrasena"
+                     type="password"
+                     autocomplete="current-password"
+                     required>
+  </label>
+  <button class="btn oscuro" type="submit">Ingresar {{ icono("arrow") }}</button>
+  </form>
+  {% if destino.siguiente=="admin" %}<a class="link-flecha" href="{{ url_for('admin.demo') }}">Explorar una agenda de ejemplo {{ icono("arrow") }}</a>{% else %}<p class="enlace-pie">¿Primera vez acá? <a href="{{ url_for('cliente.registro',**destino) }}">Creá tu cuenta</a></p>{% endif %}{% endblock %}

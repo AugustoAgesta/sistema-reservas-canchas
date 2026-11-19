@@ -1,30 +1,33 @@
-{% extends "base.html" %}
-
-{% block titulo %}Bloquear horario{% endblock %}
-
-{% block contenido %}
-    <h2>Bloquear horario</h2>
-
-    <form method="POST">
-        <label>Cancha:</label>
-        <select name="id_cancha">
-            {% for c in canchas %}
-                <option value="{{ c.id }}">{{ c.nombre }}</option>
-            {% endfor %}
-        </select>
-
-        <label>Fecha:</label>
-        <input type="date" name="fecha" required>
-
-        <label>Hora inicio:</label>
-        <input type="time" name="hora_ini" required>
-
-        <label>Hora fin:</label>
-        <input type="time" name="hora_fin" required>
-
-        <label>Motivo:</label>
-        <input type="text" name="motivo">
-
-        <button type="submit">Bloquear</button>
-    </form>
-{% endblock %}
+{% extends "base.html" %}{% from 'ui.html' import menu_admin,token,volver,icono,vacio %}{% block titulo %}Bloquear horario{% endblock %}
+{% block contenido %}<div class="contenedor pagina admin">{{ menu_admin("bloqueo") }}{{ volver('Volver a la agenda',url_for('admin.panel',fecha=valores.get('fecha'))) }}
+  <div class="cab-pagina">
+    <h1>Bloquear horario</h1>
+    <p>Reservá un intervalo para mantenimiento u otra actividad del complejo.</p>
+  </div>
+  {% if canchas %}<form method="post" class="panel formulario ancho-form">{{ token() }}<label>Cancha<select name="id_cancha" required>{% for c in canchas %}<option value="{{ c.id }}"
+                                                                                                                                                                    {% if valores.get('id_cancha')==c.id|string %}selected{% endif %}>{{ c.nombre|nombre_cancha }}</option>{% endfor %}</select></label>
+  <label>
+    Fecha<input type="date"
+                name="fecha"
+                min="{{ hoy }}"
+                value="{{ valores.get('fecha',hoy) }}"
+                required>
+  </label>
+  <div class="dos-campos">
+    <label>
+      Desde<input type="time"
+                  name="hora_ini"
+                  value="{{ valores.get('hora_ini', '') }}"
+                  required></label><label>Hasta<input type="time"
+                                                      name="hora_fin"
+                                                      value="{{ valores.get('hora_fin', '') }}"
+                                                      required>
+      </label>
+    </div>
+    <label>
+      Motivo (opcional)<input type="text"
+                              name="motivo"
+                              maxlength="200"
+                              value="{{ valores.get('motivo', '') }}">
+    </label>
+    <button class="btn oscuro">{{ icono("block") }} Guardar bloqueo</button></form>{% else %}{{ vacio('No hay canchas activas', 'Activá o agregá una cancha antes de crear un bloqueo.', 'pitch') }}{% endif %}</div>{% endblock %}
