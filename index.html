@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="es-UY">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#17392e">
+  <meta name="description" content="Probá Entretiempo. Elegí una cancha, simulá una reserva y explorá la agenda del complejo.">
+  <title>Entretiempo · Demo de reservas de canchas</title>
+  <link rel="icon" href="static/img/marca.svg">
+  <link rel="stylesheet" href="static/css/estilos.css">
+  <link rel="stylesheet" href="static/css/demo.css">
+  <script defer src="static/js/demo.js"></script>
+</head>
+<body>
+  <a class="saltar" href="#contenido">Saltar al contenido</a>
+  <header class="cabecera">
+    <div class="contenedor barra">
+      <a class="inicio marca" href="./" aria-label="Entretiempo, inicio"><img src="static/img/marca.svg" alt="" width="38" height="38"><span>Entretiempo</span></a>
+      <nav class="principal" aria-label="Principal">
+        <a href="#canchas">Canchas</a>
+        <a href="#agenda">Agenda del complejo</a>
+      </nav>
+      <a class="btn oscuro compacto cuenta" href="https://github.com/AugustoAgesta/sistema-reservas-canchas">Ver código <svg class="icono" aria-hidden="true"><use href="static/img/iconos.svg#arrow"></use></svg></a>
+    </div>
+  </header>
+  <main id="contenido" tabindex="-1">
+    <div class="contenedor portada">
+      <p class="aviso demo-nota"><svg class="icono" aria-hidden="true"><use href="static/img/iconos.svg#info"></use></svg> Demo interactiva con canchas y turnos de ejemplo. Las reservas se simulan en esta página.</p>
+      <section class="hero" aria-labelledby="titulo">
+        <div class="foto-hero" aria-hidden="true"></div>
+        <div class="hero-texto">
+          <h1 id="titulo">El próximo<br><em>partido.</em></h1>
+          <p>Elegí una cancha y probá cómo funciona una reserva.</p>
+          <a class="btn lima" href="#canchas">Explorar canchas <svg class="icono" aria-hidden="true"><use href="static/img/iconos.svg#down"></use></svg></a>
+        </div>
+      </section>
+      <noscript><p class="aviso">Activá JavaScript para probar el catálogo y la agenda interactiva.</p></noscript>
+
+      <section id="canchas" class="catalogo" aria-labelledby="titulo-catalogo">
+        <div class="cab-seccion">
+          <div><h2 id="titulo-catalogo">Encontrá tu cancha</h2><p>Consultá los turnos disponibles para el día que querés jugar.</p></div>
+          <div class="fecha-filtro"><label for="fecha"><svg class="icono" aria-hidden="true"><use href="static/img/iconos.svg#calendar"></use></svg> Fecha de juego</label><div><input id="fecha" type="date" required></div></div>
+        </div>
+        <div class="filtros">
+          <div class="pestanas" id="filtros" role="group" aria-label="Filtrar por formato"></div>
+          <small id="cantidad" aria-live="polite"></small>
+        </div>
+        <div id="catalogo-lista" class="grilla-canchas"></div>
+      </section>
+
+      <section id="reserva" class="catalogo" aria-labelledby="titulo-reserva" hidden>
+        <div class="detalle-grid">
+          <section id="detalle" class="detalle-foto" aria-label="Cancha seleccionada"></section>
+          <div class="panel turnos">
+            <h2 id="titulo-reserva" tabindex="-1">Elegí tu turno</h2>
+            <p id="dia-reserva" class="fecha-larga"></p>
+            <div id="horarios" class="horarios"></div>
+            <form id="confirmar" class="formulario confirmar-demo" hidden>
+              <p id="resumen-reserva"></p>
+              <button class="btn oscuro" type="submit">Simular reserva <svg class="icono" aria-hidden="true"><use href="static/img/iconos.svg#check"></use></svg></button>
+            </form>
+            <div id="confirmacion" role="status"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="agenda" class="catalogo" aria-labelledby="titulo-agenda">
+        <div class="cab-pagina">
+          <h2 id="titulo-agenda">Agenda del complejo</h2>
+          <p>Vista de administración con datos de ejemplo. La simulación actualiza la agenda en esta página.</p>
+        </div>
+        <div class="marcador" id="totales"></div>
+        <section class="seccion">
+          <div class="con-accion cab-agenda">
+            <div><h3>Disponibilidad</h3><p class="fecha-larga" id="dia-agenda"></p></div>
+            <div class="navegar-fecha">
+              <button class="btn-icon" id="anterior" type="button" aria-label="Día anterior"><svg class="icono" aria-hidden="true"><use href="static/img/iconos.svg#prev"></use></svg></button>
+              <button class="btn-icon" id="siguiente" type="button" aria-label="Día siguiente"><svg class="icono" aria-hidden="true"><use href="static/img/iconos.svg#next"></use></svg></button>
+            </div>
+          </div>
+          <div class="tabla-scroll" tabindex="0" role="region" aria-label="Horarios por cancha">
+            <table class="matriz"><thead id="agenda-columnas"></thead><tbody id="agenda-turnos"></tbody></table>
+          </div>
+        </section>
+      </section>
+    </div>
+  </main>
+  <footer><div class="contenedor pie"><a class="inicio marca" href="./"><img src="static/img/marca.svg" alt="" width="25" height="25"><span>Entretiempo</span></a><span>Sistema de reservas de canchas</span><small>Desarrollado por Augusto Agesta</small></div></footer>
+</body>
+</html>

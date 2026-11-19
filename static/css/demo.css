@@ -1,0 +1,33 @@
+.demo-nota { margin-bottom: 1rem; }
+.pestanas button {
+  border: 1px solid #cdd7cc;
+  border-radius: 2rem;
+  padding: .42rem .9rem;
+  color: var(--muted);
+  font-size: .85rem;
+  font-weight: 600;
+  background: transparent;
+}
+.pestanas button[aria-pressed="true"] {
+  background: var(--tinta);
+  color: white;
+  border-color: var(--tinta);
+}
+.pestanas button[aria-pressed="false"]:hover { background: var(--suave); }
+form[hidden], section[hidden] { display: none; }
+.horarios button {
+  color: #225439;
+  border-color: #abc3ad;
+  background: #f2f7ee;
+}
+.horarios button:hover, .horarios button[aria-pressed="true"] {
+  background: var(--lima);
+  border-color: var(--verde);
+}
+.confirmar-demo, #confirmacion:not(:empty) { margin-top: 1rem; }
+.navegar-fecha button:disabled { opacity: .45; cursor: default; }
+@media (max-width: 530px) {
+  .pestanas button { padding-inline: .65rem; }
+  .cabecera .cuenta { justify-self: end; }
+}
+#confirmacion:empty { display: none; }
