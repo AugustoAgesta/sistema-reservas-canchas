@@ -6,6 +6,8 @@ Este es mi segundo proyecto de portfolio, como estudiante de 3er año de Licenci
 
 > **Nota de transparencia:** este proyecto lo construí con la ayuda de Claude (Anthropic) como asistente de programación, principalmente para aprender HTML/CSS/JS y Flask desde cero, resolver dudas de sintaxis y debuggear errores. La arquitectura, la lógica de negocio y las decisiones de diseño del sistema son mías.
 
+[Probá la demo interactiva en GitHub Pages](https://augustoagesta.github.io/sistema-reservas-canchas/). Podés simular una reserva y ver cómo cambia la agenda del día con datos ficticios.
+
 ## Recorridos del portfolio
 
 Desde el catálogo podés comparar canchas, consultar la disponibilidad de una fecha y elegir un turno. Si necesitás ingresar o registrarte, se conserva el partido seleccionado. En **Mis reservas** podés revisar y cancelar tus próximos turnos.
